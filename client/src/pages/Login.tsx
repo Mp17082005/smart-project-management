@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ShieldCheck, Zap, Globe, Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -10,6 +11,7 @@ const Login = () => {
     const [message, setMessage] = useState('');
     const [isForgotMode, setIsForgotMode] = useState(false);
     const navigate = useNavigate();
+    const { refreshUser } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,6 +20,7 @@ const Login = () => {
         try {
             const res = await api.post('/auth/login', formData);
             localStorage.setItem('token', res.data.token);
+            await refreshUser();
             navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.msg || 'Login failed. Please check your credentials.');

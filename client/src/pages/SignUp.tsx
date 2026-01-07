@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { ShieldCheck, Zap, Globe, Mail, Lock, User as UserIcon, Loader2, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { refreshUser } = useAuth();
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -15,7 +18,8 @@ const SignUp = () => {
         try {
             const res = await api.post('/auth/register', formData);
             localStorage.setItem('token', res.data.token);
-            window.location.href = '/';
+            await refreshUser();
+            navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.msg || 'Registration failed. Please try again.');
         } finally {
