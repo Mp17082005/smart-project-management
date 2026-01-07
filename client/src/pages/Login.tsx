@@ -18,7 +18,7 @@ const Login = () => {
         try {
             const res = await api.post('/auth/login', formData);
             localStorage.setItem('token', res.data.token);
-            window.location.href = '/';
+            navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.msg || 'Login failed. Please check your credentials.');
         } finally {
