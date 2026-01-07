@@ -47,15 +47,23 @@ app.use('/api/activities', require('./routes/activities'));
 app.use('/api/auth', require('./routes/auth'));
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/project_management';
-mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB', err));
+const MONGODB_URI = process.env.MONGODB_URI;
+if (MONGODB_URI) {
+    mongoose.connect(MONGODB_URI)
+        .then(() => console.log('Connected to MongoDB Atlas'))
+        .catch(err => {
+            console.error('MongoDB Connection Error:', err.message);
+        });
+} else {
+    console.error('MONGODB_URI is not defined in environment variables');
+}
 
-if (process.env.NODE_ENV !== 'production') {
+// Local Server Start (only if not running on Vercel)
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     server.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(`Local server is running on port ${PORT}`);
     });
 }
 
-module.exports = server;
+// Important for Vercel: Export the Express App
+module.exports = app;
