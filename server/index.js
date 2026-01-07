@@ -39,6 +39,35 @@ app.get('/', (req, res) => {
     res.send('ProjectFlow API v1.0.0 - Fully Functional');
 });
 
+// MongoDB Connection logic for Serverless
+let isConnected = false;
+const connectDB = async () => {
+    if (isConnected) return;
+    try {
+        if (!process.env.MONGODB_URI) {
+            throw new Error('MONGODB_URI is missing');
+        }
+        const db = await mongoose.connect(process.env.MONGODB_URI);
+        isConnected = db.connections[0].readyState;
+        console.log('MongoDB Connected');
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err.message);
+        throw err;
+    }
+};
+
+// Middleware to ensure DB is connected
+app.use(async (req, res, next) => {
+    // Skip DB check for basic root path
+    if (req.path === '/') return next();
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        res.status(500).json({ msg: 'Database connection failed', error: err.message });
+    }
+});
+
 // Routes
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/tasks', require('./routes/tasks'));
@@ -46,24 +75,17 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/activities', require('./routes/activities'));
 app.use('/api/auth', require('./routes/auth'));
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI;
-if (MONGODB_URI) {
-    mongoose.connect(MONGODB_URI)
-        .then(() => console.log('Connected to MongoDB Atlas'))
-        .catch(err => {
-            console.error('MongoDB Connection Error:', err.message);
-        });
-} else {
-    console.error('MONGODB_URI is not defined in environment variables');
-}
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ msg: 'Something went wrong on the server', error: err.message });
+});
 
-// Local Server Start (only if not running on Vercel)
+// Local Server Start
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     server.listen(PORT, () => {
         console.log(`Local server is running on port ${PORT}`);
     });
 }
 
-// Important for Vercel: Export the Express App
 module.exports = app;
