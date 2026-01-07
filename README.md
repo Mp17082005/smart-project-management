@@ -31,7 +31,7 @@ ProjectFlow is a premium, production-ready project management application inspir
 
 ## 🏗️ App Flow
 
-1. **Login**: User authenticates via Google.
+1. **Login**: User authenticates 
 2. **Dashboard**: View all active projects and global progress.
 3. **Project Detail**: Manage specific tasks via Kanban Board or List.
 4. **Task Detail**: Assign users, set priority/due dates, and comment.
