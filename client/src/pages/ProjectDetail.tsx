@@ -123,27 +123,27 @@ const ProjectDetail = () => {
                 <span className="text-slate-900 font-medium">{project.title}</span>
             </div>
 
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-4 max-w-2xl">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">{project.title}</h1>
-                        <div className="px-3 py-1 bg-primary/10 text-primary rounded-xl text-xs font-mono font-bold flex items-center gap-2">
+            <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <div className="space-y-4 max-w-2xl text-center md:text-left">
+                    <div className="flex flex-col md:flex-row items-center gap-4">
+                        <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">{project.title}</h1>
+                        <div className="px-3 py-1 bg-primary/10 text-primary rounded-xl text-[10px] md:text-xs font-mono font-bold flex items-center gap-2">
                             TOKEN: {project.token}
                         </div>
                     </div>
-                    <p className="text-slate-500 leading-relaxed text-lg">{project.description}</p>
+                    <p className="text-slate-500 leading-relaxed text-base md:text-lg">{project.description}</p>
 
-                    <div className="flex flex-wrap items-center gap-6 pt-2">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-slate-100 shadow-sm">
-                            <Calendar size={16} className="text-primary" />
-                            <span className="text-sm font-semibold text-slate-700">
+                            <Calendar size={14} className="text-primary" />
+                            <span className="text-xs font-semibold text-slate-700">
                                 {project.deadline ? new Date(project.deadline).toLocaleDateString() : 'No deadline'}
                             </span>
                         </div>
 
                         <div className="flex items-center -space-x-2">
                             {project.members?.map((m: any, i: number) => (
-                                <div key={i} title={m.name} className="w-9 h-9 rounded-full border-2 border-white bg-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                                <div key={i} title={m.name} className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-white bg-primary text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
                                     {m.name?.charAt(0) || m.email?.charAt(0)}
                                 </div>
                             ))}
@@ -151,24 +151,24 @@ const ProjectDetail = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                    <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200 w-full sm:w-auto">
                         <button
                             onClick={() => setView('board')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === 'board' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === 'board' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <LayoutGrid size={16} />
                             Board
                         </button>
                         <button
                             onClick={() => setView('list')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === 'list' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${view === 'list' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <List size={16} />
                             List
                         </button>
                     </div>
-                    <button onClick={() => setIsTaskModalOpen(true)} className="btn-primary flex items-center gap-2 shadow-lg shadow-primary/20">
+                    <button onClick={() => setIsTaskModalOpen(true)} className="w-full sm:w-auto btn-primary flex items-center justify-center gap-2 shadow-lg shadow-primary/20 py-3 sm:py-2 text-sm">
                         <Plus size={18} />
                         Add Task
                     </button>
@@ -176,24 +176,24 @@ const ProjectDetail = () => {
             </header>
 
             {view === 'board' ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0">
                     {columns.map(column => (
-                        <div key={column} className="flex flex-col gap-4">
+                        <div key={column} className="flex flex-col gap-4 min-w-full md:min-w-[320px] lg:flex-1">
                             <div className="flex items-center justify-between px-2">
                                 <div className="flex items-center gap-3">
-                                    <h3 className="font-bold text-slate-800 uppercase tracking-widest text-xs">{column}</h3>
-                                    <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px] font-black italic">
+                                    <h3 className="font-bold text-slate-800 uppercase tracking-widest text-[10px] md:text-xs">{column}</h3>
+                                    <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[9px] md:text-[10px] font-black italic">
                                         {tasks.filter(t => t.status === column).length}
                                     </span>
                                 </div>
-                                <button onClick={() => setIsTaskModalOpen(true)} className="text-slate-400 hover:text-slate-600"><Plus size={16} /></button>
+                                <button onClick={() => setIsTaskModalOpen(true)} className="text-slate-400 hover:text-slate-600"><Plus size={14} /></button>
                             </div>
 
-                            <div className="flex flex-col gap-4 min-h-[500px] p-2 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                            <div className="flex flex-col gap-4 min-h-[400px] md:min-h-[500px] p-2 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
                                 {tasks.filter(t => t.status === column).map(task => (
-                                    <div key={task._id} className="card group hover:shadow-md transition-all hover:border-primary/20">
+                                    <div key={task._id} className="card group hover:shadow-md transition-all hover:border-primary/20 p-4">
                                         <div className="flex justify-between items-start mb-3">
-                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${task.priority === 'High' ? 'bg-red-100 text-red-600' :
+                                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase ${task.priority === 'High' ? 'bg-red-100 text-red-600' :
                                                 task.priority === 'Medium' ? 'bg-amber-100 text-amber-600' :
                                                     'bg-blue-100 text-blue-600'
                                                 }`}>
@@ -204,7 +204,7 @@ const ProjectDetail = () => {
                                                     value={task.status}
                                                     disabled={!canUpdateTask(task)}
                                                     onChange={(e) => updateStatus(task._id, e.target.value)}
-                                                    className={`text-[10px] bg-white border border-slate-200 rounded px-1 outline-none font-bold ${!canUpdateTask(task) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                    className={`text-[9px] bg-white border border-slate-200 rounded px-1 outline-none font-bold ${!canUpdateTask(task) ? 'opacity-50 cursor-not-allowed' : ''}`}
                                                     title={!canUpdateTask(task) ? "Only the assigned user can update status" : ""}
                                                 >
                                                     {columns.map(c => <option key={c} value={c}>{c}</option>)}
@@ -212,27 +212,27 @@ const ProjectDetail = () => {
                                                 {canDeleteTask(task) && (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleDeleteTask(task._id); }}
-                                                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity"
+                                                        className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity"
                                                         title="Delete Task"
                                                     >
-                                                        <Trash2 size={14} />
+                                                        <Trash2 size={12} />
                                                     </button>
                                                 )}
-                                                <button className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-slate-600 transition-opacity">
-                                                    <MoreVertical size={14} />
+                                                <button className="opacity-100 md:opacity-0 md:group-hover:opacity-100 text-slate-400 hover:text-slate-600 transition-opacity">
+                                                    <MoreVertical size={12} />
                                                 </button>
                                             </div>
                                         </div>
-                                        <h4 className="font-bold text-slate-800 mb-4 group-hover:text-primary transition-colors">{task.title}</h4>
+                                        <h4 className="font-bold text-slate-800 mb-4 group-hover:text-primary transition-colors text-sm">{task.title}</h4>
                                         <div className="flex items-center justify-between mt-auto">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold">
+                                                <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-slate-200 flex items-center justify-center text-[7px] md:text-[8px] font-bold">
                                                     {task.assignedTo?.name?.charAt(0) || 'U'}
                                                 </div>
-                                                <span className="text-xs text-slate-500 font-medium">{task.assignedTo?.name || 'Unassigned'}</span>
+                                                <span className="text-[10px] md:text-xs text-slate-500 font-medium">{task.assignedTo?.name?.split(' ')[0] || 'Unassigned'}</span>
                                             </div>
                                             <div className="text-slate-300">
-                                                <BarChart3 size={14} />
+                                                <BarChart3 size={12} />
                                             </div>
                                         </div>
                                     </div>
@@ -242,27 +242,27 @@ const ProjectDetail = () => {
                     ))}
                 </div>
             ) : (
-                <div className="card overflow-hidden p-0">
-                    <table className="w-full text-left">
+                <div className="card overflow-x-auto p-0">
+                    <table className="w-full text-left min-w-[600px]">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Task</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Priority</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Assignee</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider"></th>
+                                <th className="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">Task</th>
+                                <th className="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                                <th className="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">Priority</th>
+                                <th className="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">Assignee</th>
+                                <th className="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider"></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {tasks.map(task => (
                                 <tr key={task._id} className="hover:bg-slate-50 transition-colors group">
-                                    <td className="px-6 py-4 font-bold text-slate-800">{task.title}</td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-4 md:px-6 py-4 font-bold text-slate-800 text-sm">{task.title}</td>
+                                    <td className="px-4 md:px-6 py-4">
                                         <select
                                             value={task.status}
                                             disabled={!canUpdateTask(task)}
                                             onChange={(e) => updateStatus(task._id, e.target.value)}
-                                            className={`px-3 py-1 rounded-full text-xs font-bold appearance-none outline-none ${!canUpdateTask(task) ? 'opacity-50 cursor-not-allowed' : ''} ${task.status === 'Done' ? 'bg-emerald-100 text-emerald-600' :
+                                            className={`px-3 py-1 rounded-full text-[10px] font-bold appearance-none outline-none ${!canUpdateTask(task) ? 'opacity-50 cursor-not-allowed' : ''} ${task.status === 'Done' ? 'bg-emerald-100 text-emerald-600' :
                                                 task.status === 'In Progress' ? 'bg-blue-100 text-blue-600' :
                                                     'bg-slate-100 text-slate-500'
                                                 }`}
@@ -271,28 +271,28 @@ const ProjectDetail = () => {
                                             {columns.map(c => <option key={c} value={c}>{c}</option>)}
                                         </select>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-slate-600">{task.priority}</td>
-                                    <td className="px-6 py-4">
+                                    <td className="px-4 md:px-6 py-4 text-xs md:text-sm text-slate-600">{task.priority}</td>
+                                    <td className="px-4 md:px-6 py-4">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold">
+                                            <div className="w-5 h-5 md:w-6 md:h-6 rounded-full bg-slate-200 flex items-center justify-center text-[7px] md:text-[8px] font-bold">
                                                 {task.assignedTo?.name?.charAt(0) || 'U'}
                                             </div>
-                                            <span className="text-sm text-slate-700">{task.assignedTo?.name || 'Unassigned'}</span>
+                                            <span className="text-xs md:text-sm text-slate-700">{task.assignedTo?.name?.split(' ')[0] || 'Unassigned'}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="px-4 md:px-6 py-4 text-right">
+                                        <div className="flex justify-end gap-1 md:gap-2">
                                             {canDeleteTask(task) && (
                                                 <button
                                                     onClick={() => handleDeleteTask(task._id)}
-                                                    className="p-2 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                                                    className="p-1.5 md:p-2 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors border border-transparent hover:border-red-100"
                                                     title="Delete Task"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Trash2 size={14} />
                                                 </button>
                                             )}
-                                            <button className="p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200">
-                                                <MoreVertical size={16} className="text-slate-400" />
+                                            <button className="p-1.5 md:p-2 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-slate-200">
+                                                <MoreVertical size={14} className="text-slate-400" />
                                             </button>
                                         </div>
                                     </td>

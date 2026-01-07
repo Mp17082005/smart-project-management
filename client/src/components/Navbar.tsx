@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Bell, LogOut, Search, User, X } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Bell, LogOut, Search, User, X, Menu as MenuIcon } from 'lucide-react';
 import { Menu, Transition } from '@headlessui/react';
 import api from '../services/api';
 import { io } from 'socket.io-client';
@@ -10,6 +10,7 @@ const Navbar = () => {
     const location = useLocation();
     const [notifications, setNotifications] = useState<any[]>([]);
     const [showNotifications, setShowNotifications] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { user, logout } = useAuth();
 
     useEffect(() => {
@@ -18,11 +19,24 @@ const Navbar = () => {
 
     useEffect(() => {
         if (user?._id) {
-            const socket = io(import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000');
+            // Only attempt socket connection if not on Vercel or if we specifically want it
+            // Vercel doesn't support Socket.io, so we avoid the 404 spam.
+            if (window.location.hostname.includes('vercel.app')) {
+                console.log('Socket.io disabled on Vercel environment');
+                return;
+            }
+
+            const socket = io(import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000', {
+                transports: ['websocket', 'polling']
+            });
             socket.emit('join', user._id);
 
             socket.on('notification', (data) => {
                 setNotifications((prev: any[]) => [{ details: data.details, createdAt: new Date() }, ...prev]);
+            });
+
+            socket.on('connect_error', (err) => {
+                console.warn('Socket connection error, falling back to REST:', err.message);
             });
 
             return () => {
@@ -73,12 +87,19 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="relative group hidden sm:block">
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="md:hidden p-2 text-slate-500 hover:bg-slate-50 rounded-lg"
+                >
+                    {isMobileMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
+                </button>
+
+                <div className="relative group hidden lg:block">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
-                        placeholder="Search projects..."
-                        className="pl-10 pr-4 py-2 bg-background border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-64 transition-all"
+                        placeholder="Search..."
+                        className="pl-10 pr-4 py-2 bg-background border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 w-48 transition-all"
                     />
                 </div>
 
@@ -94,7 +115,7 @@ const Navbar = () => {
                     </button>
 
                     {showNotifications && (
-                        <div className="absolute right-0 mt-2 w-80 bg-surface rounded-2xl shadow-2xl border border-slate-100 py-2 animate-in slide-in-from-top-2 duration-200">
+                        <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-surface rounded-2xl shadow-2xl border border-slate-100 py-2 animate-in slide-in-from-top-2 duration-200">
                             <div className="px-4 py-2 border-b border-slate-50 flex items-center justify-between">
                                 <span className="font-bold text-slate-900">Notifications</span>
                                 <button onClick={() => setShowNotifications(false)} className="text-slate-400 hover:text-slate-600"><X size={16} /></button>
@@ -115,14 +136,14 @@ const Navbar = () => {
                     )}
                 </div>
 
-                <div className="h-8 w-px bg-slate-100 mx-2"></div>
+                <div className="h-8 w-px bg-slate-100 mx-1 sm:mx-2 hidden sm:block"></div>
 
                 <Menu as="div" className="relative">
-                    <Menu.Button className="flex items-center gap-2 hover:bg-slate-50 p-1 pr-3 rounded-xl transition-colors">
+                    <Menu.Button className="flex items-center gap-2 hover:bg-slate-50 p-1 sm:pr-3 rounded-xl transition-colors">
                         <div className="w-8 h-8 rounded-full border border-slate-200 bg-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">
                             {initials}
                         </div>
-                        <span className="text-sm font-semibold text-slate-700 md:block hidden">{user?.name || 'User'}</span>
+                        <span className="text-sm font-semibold text-slate-700 hidden sm:block">{user?.name?.split(' ')[0] || 'User'}</span>
                     </Menu.Button>
                     <Transition
                         as={React.Fragment}
@@ -165,6 +186,39 @@ const Navbar = () => {
                     </Transition>
                 </Menu>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 top-16 bg-surface z-40 md:hidden animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="flex flex-col p-6 gap-4">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.name}
+                                to={item.path}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center gap-4 px-6 py-4 rounded-2xl text-lg font-bold transition-all ${location.pathname === item.path
+                                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                                    : 'text-slate-600 hover:bg-slate-50'
+                                    }`}
+                            >
+                                <item.icon size={24} />
+                                {item.name}
+                            </Link>
+                        ))}
+                        <hr className="my-2 border-slate-100" />
+                        <button
+                            onClick={() => {
+                                logout();
+                                window.location.href = '/login';
+                            }}
+                            className="flex items-center gap-4 px-6 py-4 rounded-2xl text-lg font-bold text-red-500 hover:bg-red-50 transition-all"
+                        >
+                            <LogOut size={24} />
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };

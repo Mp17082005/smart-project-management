@@ -68,23 +68,23 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <header className="flex items-center justify-between">
-                <div>
+            <header className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="text-center sm:text-left">
                     <h1 className="text-3xl font-bold text-slate-900 font-sans">Projects</h1>
                     <p className="text-slate-500 mt-1">Manage and track all your active projects here.</p>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                     <button
                         onClick={() => setIsJoinModalOpen(true)}
-                        className="px-6 py-2 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary/5 transition-all"
+                        className="w-full sm:w-auto px-6 py-2 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary/5 transition-all text-sm"
                     >
                         Join Project
                     </button>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="btn-primary flex items-center gap-2 group shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full sm:w-auto btn-primary flex items-center justify-center gap-2 group shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] text-sm"
                     >
-                        <Plus size={20} className="group-hover:rotate-90 transition-transform" />
+                        <Plus size={18} className="group-hover:rotate-90 transition-transform" />
                         Create Project
                     </button>
                 </div>

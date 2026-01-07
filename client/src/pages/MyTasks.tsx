@@ -77,45 +77,45 @@ const MyTasks = () => {
 
             <div className="grid grid-cols-1 gap-4">
                 {filteredTasks.map((task) => (
-                    <div key={task._id} className="card group hover:border-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
+                    <div key={task._id} className="card group hover:border-primary/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:p-6">
+                        <div className="flex items-center gap-4 flex-1">
                             <button
                                 onClick={() => updateStatus(task._id, task.status === 'Done' ? 'To Do' : 'Done')}
-                                className={`p-2 rounded-lg transition-colors ${task.status === 'Done' ? 'bg-emerald-50 text-emerald-500 hover:bg-emerald-100' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 group-hover:text-primary'}`}
+                                className={`p-2 rounded-lg transition-colors shrink-0 ${task.status === 'Done' ? 'bg-emerald-50 text-emerald-500 hover:bg-emerald-100' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 group-hover:text-primary'}`}
                             >
                                 <CheckCircle2 size={24} />
                             </button>
-                            <div>
-                                <h4 className="font-bold text-slate-800">{task.title}</h4>
-                                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5">{task.projectId?.title || 'Project'}</p>
+                            <div className="min-w-0">
+                                <h4 className="font-bold text-slate-800 truncate text-sm md:text-base">{task.title}</h4>
+                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mt-0.5 mt-0.5">{task.projectId?.title || 'Project'}</p>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-6 md:gap-12">
-                            <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Priority</span>
-                                <span className={`text-xs font-bold ${task.priority === 'High' ? 'text-red-500' :
+                        <div className="flex items-center justify-between sm:justify-end gap-4 md:gap-12 pl-12 sm:pl-0">
+                            <div className="flex flex-col gap-1 items-start sm:items-center">
+                                <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Priority</span>
+                                <span className={`text-[10px] md:text-xs font-bold ${task.priority === 'High' ? 'text-red-500' :
                                     task.priority === 'Medium' ? 'text-amber-500' :
                                         'text-blue-500'
                                     }`}>
-                                    {task.priority}
+                                    {task.priority || 'Normal'}
                                 </span>
                             </div>
 
-                            <div className="flex flex-col gap-1 text-right">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Due Date</span>
-                                <div className={`flex items-center gap-1.5 text-xs font-bold ${new Date(task.dueDate) < new Date() && task.status !== 'Done' ? 'text-red-500' : 'text-slate-600'}`}>
-                                    {new Date(task.dueDate) < new Date() && task.status !== 'Done' ? <AlertCircle size={12} /> : <Calendar size={12} />}
+                            <div className="flex flex-col gap-1 items-start sm:items-end">
+                                <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Due Date</span>
+                                <div className={`flex items-center gap-1 text-[10px] md:text-xs font-bold ${new Date(task.dueDate) < new Date() && task.status !== 'Done' ? 'text-red-500' : 'text-slate-600'}`}>
+                                    {new Date(task.dueDate) < new Date() && task.status !== 'Done' ? <AlertCircle size={10} /> : <Calendar size={10} />}
                                     {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No date'}
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-1 min-w-[100px]">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Status</span>
+                            <div className="flex flex-col gap-1 items-start sm:items-end min-w-[80px] md:min-w-[100px]">
+                                <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:text-right">Status</span>
                                 <select
                                     value={task.status}
                                     onChange={(e) => updateStatus(task._id, e.target.value)}
-                                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase text-center appearance-none outline-none ${task.status === 'Done' ? 'bg-emerald-100 text-emerald-600' :
+                                    className={`w-full sm:w-auto px-2 md:px-3 py-1 rounded-full text-[9px] md:text-[10px] font-black uppercase text-center appearance-none outline-none ${task.status === 'Done' ? 'bg-emerald-100 text-emerald-600' :
                                         task.status === 'In Progress' ? 'bg-blue-100 text-blue-600' :
                                             'bg-slate-100 text-slate-500'
                                         }`}
