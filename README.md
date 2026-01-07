@@ -4,7 +4,6 @@ ProjectFlow is a premium, production-ready project management application inspir
 
 ## 🚀 Features
 
-- **Google OAuth Integration**: Secure and easy login with Gmail.
 - **Projects Dashboard**: Visual grid of projects with progress bars and member avatars.
 - **Kanban & List Views**: Flexible task management with status columns and detailed list views.
 - **Admin Control Panel**: Elevated privileges for managing users, projects, and global analytics.
