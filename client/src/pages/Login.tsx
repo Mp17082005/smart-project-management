@@ -18,7 +18,8 @@ const Login = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await api.post('/auth/login', formData);
+            const loginData = { ...formData, email: formData.email.toLowerCase().trim() };
+            const res = await api.post('/auth/login', loginData);
             localStorage.setItem('token', res.data.token);
             await refreshUser();
             navigate('/');

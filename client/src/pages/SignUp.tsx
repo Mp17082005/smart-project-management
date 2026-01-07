@@ -16,7 +16,8 @@ const SignUp = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await api.post('/auth/register', formData);
+            const signUpData = { ...formData, email: formData.email.toLowerCase().trim() };
+            const res = await api.post('/auth/register', signUpData);
             localStorage.setItem('token', res.data.token);
             await refreshUser();
             navigate('/');

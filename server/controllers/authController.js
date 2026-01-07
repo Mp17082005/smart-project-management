@@ -5,10 +5,12 @@ const nodemailer = require('nodemailer');
 
 // Register User
 exports.register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email?.toLowerCase().trim();
     try {
         let user = await User.findOne({ email });
         if (user) {
+            console.log(`Signup failed: User ${email} already exists`);
             return res.status(400).json({ msg: 'User already exists' });
         }
 
@@ -32,15 +34,19 @@ exports.register = async (req, res) => {
 
 // Login User
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const password = req.body.password;
+    const email = req.body.email?.toLowerCase().trim();
+    console.log(`Login attempt for: ${email}`);
     try {
         let user = await User.findOne({ email });
         if (!user) {
+            console.log(`Login failed: User ${email} not found`);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            console.log(`Login failed: Password mismatch for ${email}`);
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
